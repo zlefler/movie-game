@@ -1,6 +1,4 @@
 import axios from 'axios'
-import { randomInt } from 'crypto'
-import { genres } from './staticData'
 
 interface MovieObject {
   title: string
@@ -15,7 +13,33 @@ interface MovieResult {
   movies: MovieObject[]
 }
 
-const miniApiKey = process.env.MOVIES_MINI_API_KEY
+export const genres = [
+  'Adventure',
+  'Family',
+  'Fantasy',
+  'Crime',
+  'Drama',
+  'Comedy',
+  'Animation',
+  'Sci-Fi',
+  'Sport',
+  'Action',
+  'Thriller',
+  'Mystery',
+  'Western',
+  'Romance',
+  'Biography',
+  'Horror',
+  'War',
+  'Musical',
+  'History',
+]
+
+
+const miniApiKey = process.env.REACT_APP_MOVIES_MINI_API_KEY
+const getRandomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min) + min);
+};
 
 export const fetchMovies = async () => {
   let movies = []
@@ -24,8 +48,9 @@ export const fetchMovies = async () => {
   let url
 
   while (movies.length < 4) {
-    year = randomInt(1982, 2003)
-    genre = genres[randomInt(0, 15)]
+    year = getRandomInt(1982, 2003)
+    genre = genres[getRandomInt(0, genres.length)]
+    console.log(year, genre);
     url = `https://moviesminidatabase.p.rapidapi.com/movie/byYear/${year}/byGen/${genre}/`
 
     const headers = {
@@ -35,19 +60,18 @@ export const fetchMovies = async () => {
     let response
     try {
       response = await axios.get(url, { headers })
-      console.log(response.data)
       movies = response.data.results
+
     } catch (error) {
       console.error(error)
     }
   }
 
   const res: MovieResult = { genre, year, movies: [] }
-  console.log(`${genre} Movies In ${year}`)
+  // console.log(`${genre} Movies In ${year}`)
   for (const movie of movies) {
-    const omdbApiKey = process.env.OMDB_API_KEY
+    const omdbApiKey = process.env.REACT_APP_OMDB_API_KEY
     const omdbUrl = `http://www.omdbapi.com/?i=${movie['imdb_id']}&apikey=${omdbApiKey}`
-
     try {
       const response = await axios.get(omdbUrl)
       const data = response.data
@@ -57,12 +81,14 @@ export const fetchMovies = async () => {
           rating = movieRating['Value']
         }
       }
-      res.movies.push({
+      const movieObject = 
+      {
         title: movie['title'],
         rating,
-        boxOffice: data['boxOffice'],
+        boxOffice: data['BoxOffice'],
         poster: data['Poster'],
-      })
+      }
+      res.movies.push(movieObject)
     } catch (error) {
       console.error(error)
     }

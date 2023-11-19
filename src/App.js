@@ -1,7 +1,16 @@
 import logo from './logo.svg'
 import './App.css'
+import { fetchMovies } from './components/fetchMovies.tsx'
+import { useEffect } from 'react'
 
 function App() {
+  useEffect(() => {
+    const getMovies = async () => {
+      const response = await fetchMovies()
+      console.log(response)
+    }
+    getMovies()
+  })
   return (
     <div className="App">
       <header className="App-header">
