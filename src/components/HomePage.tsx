@@ -4,27 +4,23 @@ import { MovieResult } from '../types'
 import fetchMovies from '../lib/fetchMovies.ts'
 
 const HomePage = () => {
-    const [movieData, setMovieData] = useState<MovieResult>()
-    
-    useEffect(() => {
-        const getMovies = async () => {
-          const response = await fetchMovies()
-          console.log(response)
-          setMovieData(response)
-        }
-        getMovies()
-      }, [])
+  const [movieData, setMovieData] = useState<MovieResult>()
 
-    return (
+  useEffect(() => {
+    const getMovies = async () => {
+      const response = await fetchMovies()
+      console.log(response)
+      setMovieData(response)
+    }
+    getMovies()
+  }, [])
+
+  return (
     <>
-    <div>
-        <h1>Movie Game</h1>
-        </div>
-        <div>
-        <Posters movieData={movieData} />
-        </div>
-        </>
-        )
+      <h1>Movie Game</h1>
+      <Posters movieData={movieData} />
+    </>
+  )
 }
 
 export default HomePage
