@@ -1,47 +1,13 @@
 import axios from 'axios'
-
-interface MovieObject {
-  title: string
-  rating?: string
-  boxOffice?: string
-  poster?: string
-}
-
-interface MovieResult {
-  genre: string
-  year: number
-  movies: MovieObject[]
-}
-
-export const genres = [
-  'Adventure',
-  'Family',
-  'Fantasy',
-  'Crime',
-  'Drama',
-  'Comedy',
-  'Animation',
-  'Sci-Fi',
-  'Sport',
-  'Action',
-  'Thriller',
-  'Mystery',
-  'Western',
-  'Romance',
-  'Biography',
-  'Horror',
-  'War',
-  'Musical',
-  'History',
-]
-
+import { MovieResult } from '../types';
+import {genres} from './staticData.ts'
 
 const miniApiKey = process.env.REACT_APP_MOVIES_MINI_API_KEY
 const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-export const fetchMovies = async () => {
+const fetchMovies = async () => {
   let movies = []
   let year
   let genre
@@ -60,15 +26,14 @@ export const fetchMovies = async () => {
     let response
     try {
       response = await axios.get(url, { headers })
-      movies = response.data.results
+      // Can change later to more movies
+      movies = response.data.results.slice(0, 5)
 
     } catch (error) {
       console.error(error)
     }
   }
-
   const res: MovieResult = { genre, year, movies: [] }
-  // console.log(`${genre} Movies In ${year}`)
   for (const movie of movies) {
     const omdbApiKey = process.env.REACT_APP_OMDB_API_KEY
     const omdbUrl = `http://www.omdbapi.com/?i=${movie['imdb_id']}&apikey=${omdbApiKey}`
@@ -95,3 +60,5 @@ export const fetchMovies = async () => {
   }
   return res
 }
+
+export default fetchMovies
