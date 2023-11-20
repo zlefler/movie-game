@@ -1,11 +1,11 @@
 import axios from 'axios'
-import { MovieResult } from '../types';
-import {genres} from './staticData.ts'
+import { MovieResult } from '../types'
+import { genres } from './staticData.ts'
 
 const miniApiKey = process.env.REACT_APP_MOVIES_MINI_API_KEY
 const getRandomInt = (min, max) => {
-  return Math.floor(Math.random() * (max - min) + min);
-};
+  return Math.floor(Math.random() * (max - min) + min)
+}
 
 const fetchMovies = async () => {
   let movies = []
@@ -16,7 +16,6 @@ const fetchMovies = async () => {
   while (movies.length < 4) {
     year = getRandomInt(1982, 2003)
     genre = genres[getRandomInt(0, genres.length)]
-    console.log(year, genre);
     url = `https://moviesminidatabase.p.rapidapi.com/movie/byYear/${year}/byGen/${genre}/`
 
     const headers = {
@@ -28,7 +27,6 @@ const fetchMovies = async () => {
       response = await axios.get(url, { headers })
       // Can change later to more movies
       movies = response.data.results.slice(0, 5)
-
     } catch (error) {
       console.error(error)
     }
@@ -46,8 +44,7 @@ const fetchMovies = async () => {
           rating = movieRating['Value']
         }
       }
-      const movieObject = 
-      {
+      const movieObject = {
         title: movie['title'],
         rating,
         boxOffice: data['BoxOffice'],
