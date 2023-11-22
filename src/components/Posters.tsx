@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from '@mui/material'
 
-const Posters = ({ movieData, selectedTitles }) => {
+const Posters = ({ movieData, inputValues }) => {
   return (
     movieData && (
       <>
@@ -22,10 +22,10 @@ const Posters = ({ movieData, selectedTitles }) => {
                 width: '18%',
                 margin: '1%',
                 textAlign: 'center',
-                filter: selectedTitles.includes(movie.title)
+                filter: inputValues.includes(movie.title)
                   ? 'grayscale(100%)'
                   : 'none',
-                opacity: selectedTitles.includes(movie.title) ? '0.5' : '1',
+                opacity: inputValues.includes(movie.title) ? '0.5' : '1',
               }}
             >
               <Box>

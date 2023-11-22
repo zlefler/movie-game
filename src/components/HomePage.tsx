@@ -7,28 +7,19 @@ import fetchMovies from '../lib/fetchMovies.ts'
 
 const HomePage = () => {
   const [movieData, setMovieData] = useState<MovieResult>()
-  const [selectedTitles, setSelectedTitles] = useState<string[]>([])
   const [ratingsMode, setRatingsMode] = useState<boolean>(false)
+  const [correctAnswers, setCorrectAnswers] = useState<boolean[]>([])
+  const [inputValues, setInputValues] = useState<string[]>([])
+
   useEffect(() => {
     const getMovies = async () => {
       const response = await fetchMovies()
-      console.log(response)
+      // set answers to array the size of the list
+      setInputValues(Array(response.movies.length).fill(''))
       setMovieData(response)
     }
     getMovies()
   }, [])
-
-  const handleMovieSelection = (title: string, isSelecting: boolean) => {
-    setSelectedTitles((prevSelectedTitles) => {
-      if (isSelecting) {
-        return prevSelectedTitles.includes(title)
-          ? prevSelectedTitles
-          : [...prevSelectedTitles, title]
-      } else {
-        return prevSelectedTitles.filter((t) => t !== title)
-      }
-    })
-  }
 
   const handleModeSwitch = () => {
     setRatingsMode((ratingsMode) => !ratingsMode)
@@ -46,15 +37,22 @@ const HomePage = () => {
   }
 
   const handleSubmit = (guesses: string[]) => {
-    const answers = movieData.movies
+    const answers = [...movieData.movies]
       .sort((a, b) => {
         const aValue = ratingsMode ? a.rating : a.boxOffice
         const bValue = ratingsMode ? b.rating : b.boxOffice
         return parseRating(bValue) - parseRating(aValue)
       })
       .map((movie) => movie.title)
-
-    console.log(answers)
+    let answerArray: boolean[] = []
+    for (let i = 0; i < answers.length; i++) {
+      if (answers[i] === guesses[i]) {
+        answerArray.push(true)
+      } else {
+        answerArray.push(false)
+      }
+    }
+    setCorrectAnswers(answerArray)
   }
 
   return (
@@ -65,12 +63,14 @@ const HomePage = () => {
       ) : (
         <p>Rank the movies by their box office take</p>
       )}
-      <Posters movieData={movieData} selectedTitles={selectedTitles} />
+      <Posters movieData={movieData} inputValues={inputValues} />
       <ModeSwitch onModeChange={handleModeSwitch} ratingsMode={ratingsMode} />
       <Choices
         movieData={movieData}
         handleSubmit={handleSubmit}
-        onMovieSelect={handleMovieSelection}
+        inputValues={inputValues}
+        setInputValues={setInputValues}
+        correctAnswers={correctAnswers}
       />
     </>
   )

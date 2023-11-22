@@ -2,145 +2,60 @@ import React from 'react'
 import { Autocomplete, TextField, Button } from '@mui/material'
 import { useState, useEffect } from 'react'
 
-const Choices = ({ movieData, onMovieSelect, handleSubmit }) => {
-  const [titles, setTitles] = useState<string[]>()
-  const [one, setOne] = useState<string>('')
-  const [two, setTwo] = useState<string>('')
-  const [three, setThree] = useState<string>('')
-  const [four, setFour] = useState<string>('')
-  const [five, setFive] = useState<string>('')
+const Choices = ({
+  movieData,
+  inputValues,
+  setInputValues,
+  handleSubmit,
+  correctAnswers,
+}) => {
+  const [titles, setTitles] = useState<string[]>([])
 
   useEffect(() => {
     const titleArray = movieData.movies.map((movie) => movie.title)
     setTitles(titleArray)
   }, [movieData])
 
-  const onSubmit = () => {
-    const choicesArr = [one, two, three, four, five]
-    handleSubmit(choicesArr)
+  const handleInputChange = (index, newValue) => {
+    setInputValues((values) =>
+      values.map((value, i) => (i === index ? newValue : value))
+    )
   }
 
   return (
-    <>
-      {titles && titles.length > 0 && (
-        <div>
-          <Autocomplete
-            className="autocomplete"
-            sx={{
-              padding: '0.5rem',
-              width: 300,
-              '& .MuiAutocomplete-inputRoot': {
-                backgroundColor: 'white',
-              },
-            }}
-            options={titles}
-            inputValue={one}
-            onInputChange={(event, newValue) => {
-              if (newValue) {
-                onMovieSelect(newValue, true)
-              } else {
-                onMovieSelect(one, false)
+    titles &&
+    titles.length > 0 && (
+      <div>
+        {titles.map((movie, index) => (
+          <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+            <Autocomplete
+              sx={{
+                padding: '0.5rem',
+                width: 300,
+                '& .MuiAutocomplete-inputRoot': {
+                  backgroundColor: 'white',
+                },
+              }}
+              options={titles}
+              inputValue={inputValues ? inputValues[index] : ''}
+              onInputChange={(event, newValue) =>
+                handleInputChange(index, newValue)
               }
-              setOne(newValue)
-            }}
-            renderInput={(params) => <TextField {...params} label="1" />}
-          />
-          <Autocomplete
-            className="autocomplete"
-            sx={{
-              padding: '0.5rem',
-              width: 300,
-              '& .MuiAutocomplete-inputRoot': {
-                backgroundColor: 'white',
-              },
-            }}
-            options={titles}
-            inputValue={two}
-            onInputChange={(event, newValue) => {
-              if (newValue) {
-                onMovieSelect(newValue, true)
-              } else {
-                onMovieSelect(two, false)
-              }
-              setTwo(newValue)
-            }}
-            renderInput={(params) => <TextField {...params} label="2" />}
-          />
-          <Autocomplete
-            className="autocomplete"
-            sx={{
-              padding: '0.5rem',
-              width: 300,
-              '& .MuiAutocomplete-inputRoot': {
-                backgroundColor: 'white',
-              },
-            }}
-            options={titles}
-            inputValue={three}
-            onInputChange={(event, newValue) => {
-              if (newValue) {
-                onMovieSelect(newValue, true)
-              } else {
-                onMovieSelect(three, false)
-              }
-              setThree(newValue)
-            }}
-            renderInput={(params) => <TextField {...params} label="3" />}
-          />
-          <Autocomplete
-            className="autocomplete"
-            sx={{
-              padding: '0.5rem',
-              width: 300,
-              '& .MuiAutocomplete-inputRoot': {
-                backgroundColor: 'white',
-              },
-            }}
-            options={titles}
-            inputValue={four}
-            onInputChange={(event, newValue) => {
-              if (newValue) {
-                onMovieSelect(newValue, true)
-              } else {
-                onMovieSelect(four, false)
-              }
-              setFour(newValue)
-            }}
-            renderInput={(params) => <TextField {...params} label="4" />}
-          />
-          <Autocomplete
-            className="autocomplete"
-            sx={{
-              padding: '0.5rem',
-              width: 300,
-              '& .MuiAutocomplete-inputRoot': {
-                backgroundColor: 'white',
-              },
-            }}
-            options={titles}
-            inputValue={five}
-            onInputChange={(event, newValue) => {
-              if (newValue) {
-                onMovieSelect(newValue, true)
-              } else {
-                onMovieSelect(five, false)
-              }
-              setFive(newValue)
-            }}
-            renderInput={(params) => <TextField {...params} label="5" />}
-          />
-          <div>
-            <Button
-              sx={{ width: '300px' }}
-              variant="contained"
-              onClick={onSubmit}
-            >
-              Submit
-            </Button>
+              renderInput={(params) => (
+                <TextField {...params} label={`${index + 1}`} />
+              )}
+            />
           </div>
-        </div>
-      )}
-    </>
+        ))}
+        <Button
+          sx={{ width: '300px', marginTop: '30px' }}
+          variant="contained"
+          onClick={() => handleSubmit(inputValues)}
+        >
+          Submit
+        </Button>
+      </div>
+    )
   )
 }
 
