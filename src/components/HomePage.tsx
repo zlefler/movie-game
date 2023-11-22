@@ -12,6 +12,7 @@ const HomePage = () => {
   useEffect(() => {
     const getMovies = async () => {
       const response = await fetchMovies()
+      console.log(response)
       setMovieData(response)
     }
     getMovies()
@@ -20,12 +21,10 @@ const HomePage = () => {
   const handleMovieSelection = (title: string, isSelecting: boolean) => {
     setSelectedTitles((prevSelectedTitles) => {
       if (isSelecting) {
-        // Add the title if it's not already in the array
         return prevSelectedTitles.includes(title)
           ? prevSelectedTitles
           : [...prevSelectedTitles, title]
       } else {
-        // Remove the title if it's being unselected
         return prevSelectedTitles.filter((t) => t !== title)
       }
     })
@@ -39,18 +38,23 @@ const HomePage = () => {
     return <div>Loading...</div>
   }
 
+  const parseRating = (value: string | undefined): number => {
+    if (value === undefined) {
+      return 0
+    }
+    return ratingsMode ? parseInt(value.slice(0, -1)) : parseInt(value.slice(1))
+  }
+
   const handleSubmit = (guesses: string[]) => {
-  let answers = []
-  if (ratingsMode) {
-    answers = movieData.movies.sort(
-      function(a, b){return parseInt(b.rating.slice(0, b.rating.length-1))-parseInt(a.rating.slice(0, a.rating.length-1))})
-      console.log(answers);
-  }
+    const answers = movieData.movies
+      .sort((a, b) => {
+        const aValue = ratingsMode ? a.rating : a.boxOffice
+        const bValue = ratingsMode ? b.rating : b.boxOffice
+        return parseRating(bValue) - parseRating(aValue)
+      })
+      .map((movie) => movie.title)
 
-  else {
-    answers = movieData.movies.map(movie => parseInt(movie.rating?.slice(0, movie.rating.length-1))).sort()
-  }
-
+    console.log(answers)
   }
 
   return (
@@ -63,7 +67,11 @@ const HomePage = () => {
       )}
       <Posters movieData={movieData} selectedTitles={selectedTitles} />
       <ModeSwitch onModeChange={handleModeSwitch} ratingsMode={ratingsMode} />
-      <Choices movieData={movieData} handleSubmit={handleSubmit} onMovieSelect={handleMovieSelection} />
+      <Choices
+        movieData={movieData}
+        handleSubmit={handleSubmit}
+        onMovieSelect={handleMovieSelection}
+      />
     </>
   )
 }

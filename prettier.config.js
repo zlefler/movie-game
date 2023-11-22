@@ -6,7 +6,6 @@ const config = {
   semi: false,
   singleQuote: true,
   arrowParens: 'always',
-  allowImportingTsExtensions: true,
   overrides: [
     {
       files: 'Routes.*',
@@ -15,5 +14,6 @@ const config = {
       },
     },
   ],
-}
-export default config;
+};
+
+module.exports = config;

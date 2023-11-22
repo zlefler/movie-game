@@ -16,8 +16,8 @@ const Choices = ({ movieData, onMovieSelect, handleSubmit }) => {
   }, [movieData])
 
   const onSubmit = () => {
-    const arr = [one, two, three, four, five]
-handleSubmit()
+    const choicesArr = [one, two, three, four, five]
+    handleSubmit(choicesArr)
   }
 
   return (
@@ -130,8 +130,14 @@ handleSubmit()
             renderInput={(params) => <TextField {...params} label="5" />}
           />
           <div>
-          <Button sx={{width:'300px'}} variant='contained' onClick={onSubmit}>Submit</Button>
-        </div>
+            <Button
+              sx={{ width: '300px' }}
+              variant="contained"
+              onClick={onSubmit}
+            >
+              Submit
+            </Button>
+          </div>
         </div>
       )}
     </>
