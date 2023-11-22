@@ -12,15 +12,10 @@ const HomePage = () => {
   useEffect(() => {
     const getMovies = async () => {
       const response = await fetchMovies()
-      console.log(response)
       setMovieData(response)
     }
     getMovies()
   }, [])
-
-  useEffect(() => {
-    console.log(ratingsMode)
-  }, [ratingsMode])
 
   const handleMovieSelection = (title: string, isSelecting: boolean) => {
     setSelectedTitles((prevSelectedTitles) => {
@@ -44,6 +39,20 @@ const HomePage = () => {
     return <div>Loading...</div>
   }
 
+  const handleSubmit = (guesses: string[]) => {
+  let answers = []
+  if (ratingsMode) {
+    answers = movieData.movies.sort(
+      function(a, b){return parseInt(b.rating.slice(0, b.rating.length-1))-parseInt(a.rating.slice(0, a.rating.length-1))})
+      console.log(answers);
+  }
+
+  else {
+    answers = movieData.movies.map(movie => parseInt(movie.rating?.slice(0, movie.rating.length-1))).sort()
+  }
+
+  }
+
   return (
     <>
       <h1>Movie Rankings</h1>
@@ -54,7 +63,7 @@ const HomePage = () => {
       )}
       <Posters movieData={movieData} selectedTitles={selectedTitles} />
       <ModeSwitch onModeChange={handleModeSwitch} ratingsMode={ratingsMode} />
-      <Choices movieData={movieData} onMovieSelect={handleMovieSelection} />
+      <Choices movieData={movieData} handleSubmit={handleSubmit} onMovieSelect={handleMovieSelection} />
     </>
   )
 }

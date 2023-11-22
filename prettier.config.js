@@ -1,12 +1,12 @@
-// https://prettier.io/docs/en/options.html
-/** @type {import('prettier').RequiredOptions} */
-module.exports = {
+/** @type {import("prettier").Config} */
+const config = {
   trailingComma: 'es5',
   bracketSpacing: true,
   tabWidth: 2,
   semi: false,
   singleQuote: true,
   arrowParens: 'always',
+  allowImportingTsExtensions: true,
   overrides: [
     {
       files: 'Routes.*',
@@ -16,3 +16,4 @@ module.exports = {
     },
   ],
 }
+export default config;

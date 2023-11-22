@@ -1,8 +1,8 @@
 import React from 'react'
-import { Autocomplete, TextField } from '@mui/material'
+import { Autocomplete, TextField, Button } from '@mui/material'
 import { useState, useEffect } from 'react'
 
-const Choices = ({ movieData, onMovieSelect }) => {
+const Choices = ({ movieData, onMovieSelect, handleSubmit }) => {
   const [titles, setTitles] = useState<string[]>()
   const [one, setOne] = useState<string>('')
   const [two, setTwo] = useState<string>('')
@@ -14,6 +14,11 @@ const Choices = ({ movieData, onMovieSelect }) => {
     const titleArray = movieData.movies.map((movie) => movie.title)
     setTitles(titleArray)
   }, [movieData])
+
+  const onSubmit = () => {
+    const arr = [one, two, three, four, five]
+handleSubmit()
+  }
 
   return (
     <>
@@ -124,6 +129,9 @@ const Choices = ({ movieData, onMovieSelect }) => {
             }}
             renderInput={(params) => <TextField {...params} label="5" />}
           />
+          <div>
+          <Button sx={{width:'300px'}} variant='contained' onClick={onSubmit}>Submit</Button>
+        </div>
         </div>
       )}
     </>
