@@ -14,8 +14,8 @@ const HomePage = () => {
   useEffect(() => {
     const getMovies = async () => {
       const response = await fetchMovies()
-      // set answers to array the size of the list
       setInputValues(Array(response.movies.length).fill(''))
+      // setInputValues(response.movies.map((movie) => movie.title))
       setMovieData(response)
     }
     getMovies()
@@ -63,7 +63,11 @@ const HomePage = () => {
       ) : (
         <p>Rank the movies by their box office take</p>
       )}
-      <Posters movieData={movieData} inputValues={inputValues} />
+      <Posters
+        movieData={movieData}
+        inputValues={inputValues}
+        setInputValues={setInputValues}
+      />
       <ModeSwitch onModeChange={handleModeSwitch} ratingsMode={ratingsMode} />
       <Choices
         movieData={movieData}
