@@ -37,7 +37,7 @@ const fetchMovies = async () => {
   const res: MovieResult = { genre, year, movies: [] }
   for (const movie of movies) {
     const omdbApiKey = process.env.REACT_APP_OMDB_API_KEY
-    const omdbUrl = `http://www.omdbapi.com/?i=${movie['imdb_id']}&apikey=${omdbApiKey}`
+    const omdbUrl = `https://www.omdbapi.com/?i=${movie['imdb_id']}&apikey=${omdbApiKey}`
     try {
       const response = await axios.get(omdbUrl)
       const data = response.data
