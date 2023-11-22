@@ -52,7 +52,7 @@ const Posters = ({ movieData, inputValues, setInputValues }) => {
         newInputValues.splice(newIndex, 0, draggedTitle)
 
         // Update the state with the new order
-        setInputValues(newInputValues)
+        // setInputValues(newInputValues)
       })
 
       drake.on('cancel', function (el) {
