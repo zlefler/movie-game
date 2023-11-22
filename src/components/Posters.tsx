@@ -21,38 +21,39 @@ const Posters = ({ movieData, inputValues, setInputValues }) => {
       })
 
       drake.on('drop', function (el, target, source, sibling) {
-        // Get the movie title of the dragged element
-        const draggedTitle = el.querySelector('p').innerText
+        el.style.opacity = '1'
+        //   // Get the movie title of the dragged element
+        //   const draggedTitle = el.querySelector('p').innerText
 
-        // Create a copy of the current inputValues array
-        const newInputValues = [...inputValues]
+        //   // Create a copy of the current inputValues array
+        //   const newInputValues = [...inputValues]
 
-        // Find the index of the dragged movie in the current array
-        const oldIndex = newInputValues.indexOf(draggedTitle)
+        //   // Find the index of the dragged movie in the current array
+        //   const oldIndex = newInputValues.indexOf(draggedTitle)
 
-        let newIndex
-        if (!sibling) {
-          // If there's no sibling, the movie was dragged to the end
-          newIndex = newInputValues.length - 1
-        } else {
-          // If there's a sibling, find the index of the sibling in the array
-          const siblingTitle = sibling.querySelector('p').innerText
-          newIndex = newInputValues.indexOf(siblingTitle)
+        //   let newIndex
+        //   if (!sibling) {
+        //     // If there's no sibling, the movie was dragged to the end
+        //     newIndex = newInputValues.length - 1
+        //   } else {
+        //     // If there's a sibling, find the index of the sibling in the array
+        //     const siblingTitle = sibling.querySelector('p').innerText
+        //     newIndex = newInputValues.indexOf(siblingTitle)
 
-          // If dragging down, insert before the sibling's index; if up, after
-          if (oldIndex < newIndex) {
-            newIndex--
-          }
-        }
+        //     // If dragging down, insert before the sibling's index; if up, after
+        //     if (oldIndex < newIndex) {
+        //       newIndex--
+        //     }
+        //   }
 
-        // Remove the dragged item from its old position
-        newInputValues.splice(oldIndex, 1)
+        //   // Remove the dragged item from its old position
+        //   newInputValues.splice(oldIndex, 1)
 
-        // Insert the dragged item at its new position
-        newInputValues.splice(newIndex, 0, draggedTitle)
+        //   // Insert the dragged item at its new position
+        //   newInputValues.splice(newIndex, 0, draggedTitle)
 
-        // Update the state with the new order
-        // setInputValues(newInputValues)
+        //   // Update the state with the new order
+        //   setInputValues(newInputValues)
       })
 
       drake.on('cancel', function (el) {
