@@ -7,6 +7,8 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min) + min)
 }
 
+const delay = (ms) => new Promise((res) => setTimeout(res, ms))
+
 const fetchMovies = async () => {
   let movies = []
   let year
@@ -29,6 +31,7 @@ const fetchMovies = async () => {
       movies = response.data.results.slice(0, 5)
     } catch (error) {
       console.error(error)
+      await delay(500)
     }
   }
   const res: MovieResult = { genre, year, movies: [] }
