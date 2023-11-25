@@ -1,74 +1,62 @@
 import React from 'react'
-import { Card } from '@mui/material'
-import dragula from 'dragula'
+import { Card, Button } from '@mui/material'
+import dragula from 'react-dragula'
 import { useEffect, useRef } from 'react'
 
-const Posters = ({ movieData, inputValues, setInputValues }) => {
+const Posters = ({
+  movieData,
+  inputValues,
+  setInputValues,
+  submitted,
+  handleSubmit,
+}) => {
   const movieContainerRef = useRef(null)
 
   useEffect(() => {
     if (movieContainerRef.current && movieData.movies.length) {
-      const drake = dragula([movieContainerRef.current], {
-        revertOnSpill: true,
-      })
-
-      drake.on('drag', function (el) {
-        el.style.opacity = '0.5'
-      })
-
-      drake.on('dragend', function (el) {
-        el.style.opacity = '1'
-      })
+      const drake = dragula([movieContainerRef.current], {})
 
       drake.on('drop', function (el, target, source, sibling) {
-        el.style.opacity = '1'
-        //   // Get the movie title of the dragged element
-        //   const draggedTitle = el.querySelector('p').innerText
+        const draggedTitle = el.querySelector('p').innerText
 
-        //   // Create a copy of the current inputValues array
-        //   const newInputValues = [...inputValues]
+        const newInputValues = [...inputValues]
 
-        //   // Find the index of the dragged movie in the current array
-        //   const oldIndex = newInputValues.indexOf(draggedTitle)
+        const oldIndex = newInputValues.indexOf(draggedTitle)
 
-        //   let newIndex
-        //   if (!sibling) {
-        //     // If there's no sibling, the movie was dragged to the end
-        //     newIndex = newInputValues.length - 1
-        //   } else {
-        //     // If there's a sibling, find the index of the sibling in the array
-        //     const siblingTitle = sibling.querySelector('p').innerText
-        //     newIndex = newInputValues.indexOf(siblingTitle)
+        let newIndex
+        if (!sibling) {
+          // If there's no sibling, the movie was dragged to the end
+          newIndex = newInputValues.length - 1
+        } else {
+          // If there's a sibling, find the index of the sibling in the array
+          const siblingTitle = sibling.querySelector('p').innerText
+          newIndex = newInputValues.indexOf(siblingTitle)
 
-        //     // If dragging down, insert before the sibling's index; if up, after
-        //     if (oldIndex < newIndex) {
-        //       newIndex--
-        //     }
-        //   }
+          // If dragging down, insert before the sibling's index; if up, after
+          if (oldIndex < newIndex) {
+            newIndex--
+          }
+        }
+        // Remove the dragged item from its old position
+        newInputValues.splice(oldIndex, 1)
 
-        //   // Remove the dragged item from its old position
-        //   newInputValues.splice(oldIndex, 1)
+        // Insert the dragged item at its new position
+        newInputValues.splice(newIndex, 0, draggedTitle)
 
-        //   // Insert the dragged item at its new position
-        //   newInputValues.splice(newIndex, 0, draggedTitle)
-
-        //   // Update the state with the new order
-        //   setInputValues(newInputValues)
-      })
-
-      drake.on('cancel', function (el) {
-        el.style.opacity = '1'
+        // Update the state with the new order
+        setInputValues(newInputValues)
       })
 
       return () => drake.destroy()
     }
-  }, [movieData?.movies])
+  }, [movieData?.movies, inputValues, setInputValues])
 
   return (
     movieData && (
       <>
         <h2>
           {movieData.genre} Movies In {movieData.year}
+          {submitted && <p>Your ranks</p>}
         </h2>
         <div
           ref={movieContainerRef}
@@ -85,12 +73,9 @@ const Posters = ({ movieData, inputValues, setInputValues }) => {
                 width: '18%',
                 margin: '1%',
                 textAlign: 'center',
-                filter: inputValues.includes(movie.title)
-                  ? 'grayscale(100%)'
-                  : 'none',
-                opacity: inputValues.includes(movie.title) ? '0.5' : '1',
               }}
             >
+              {submitted && <p>{inputValues.indexOf(movie.title) + 1}</p>}
               <Card>
                 <img
                   alt={movie.title}
@@ -102,6 +87,13 @@ const Posters = ({ movieData, inputValues, setInputValues }) => {
             </div>
           ))}
         </div>
+        <Button
+          sx={{ width: '300px', marginTop: '30px' }}
+          variant="contained"
+          onClick={() => handleSubmit()}
+        >
+          Submit
+        </Button>
       </>
     )
   )

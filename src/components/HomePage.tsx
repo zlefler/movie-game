@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Posters from './Posters.tsx'
-import Choices from './Choices.tsx'
 import ModeSwitch from './ModeSwitch.tsx'
 import { MovieResult } from '../types'
 import fetchMovies from '../lib/fetchMovies.ts'
@@ -8,26 +7,18 @@ import fetchMovies from '../lib/fetchMovies.ts'
 const HomePage = () => {
   const [movieData, setMovieData] = useState<MovieResult>()
   const [ratingsMode, setRatingsMode] = useState<boolean>(false)
-  const [correctAnswers, setCorrectAnswers] = useState<boolean[]>([])
   const [inputValues, setInputValues] = useState<string[]>([])
+  const [submitted, setSubmitted] = useState<boolean>(false)
+  // const [correctAnswers, setCorrectAnswers] = useState<boolean[]>([])
 
   useEffect(() => {
     const getMovies = async () => {
       const response = await fetchMovies()
-      setInputValues(Array(response.movies.length).fill(''))
-      // setInputValues(response.movies.map((movie) => movie.title))
+      setInputValues(response.movies.map((movie) => movie.title))
       setMovieData(response)
     }
     getMovies()
   }, [])
-
-  const handleModeSwitch = () => {
-    setRatingsMode((ratingsMode) => !ratingsMode)
-  }
-
-  if (!movieData) {
-    return <div>Loading...</div>
-  }
 
   const parseRating = (value: string | undefined): number => {
     if (value === undefined) {
@@ -36,23 +27,36 @@ const HomePage = () => {
     return ratingsMode ? parseInt(value.slice(0, -1)) : parseInt(value.slice(1))
   }
 
-  const handleSubmit = (guesses: string[]) => {
-    const answers = [...movieData.movies]
-      .sort((a, b) => {
-        const aValue = ratingsMode ? a.rating : a.boxOffice
-        const bValue = ratingsMode ? b.rating : b.boxOffice
-        return parseRating(bValue) - parseRating(aValue)
-      })
-      .map((movie) => movie.title)
+  const handleSubmit = () => {
+    if (!movieData) {
+      return
+    }
+    const order = [...movieData.movies].sort((a, b) => {
+      const aValue = ratingsMode ? a.rating : a.boxOffice
+      const bValue = ratingsMode ? b.rating : b.boxOffice
+      return parseRating(bValue) - parseRating(aValue)
+    })
+    setMovieData({ ...movieData, movies: order })
+
+    const answers = order.map((movie) => movie.title)
     let answerArray: boolean[] = []
     for (let i = 0; i < answers.length; i++) {
-      if (answers[i] === guesses[i]) {
+      if (answers[i] === inputValues[i]) {
         answerArray.push(true)
       } else {
         answerArray.push(false)
       }
     }
-    setCorrectAnswers(answerArray)
+    // setCorrectAnswers(answerArray)
+    setSubmitted(true)
+  }
+
+  const handleModeSwitch = () => {
+    setRatingsMode((ratingsMode) => !ratingsMode)
+  }
+
+  if (!movieData) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -63,18 +67,13 @@ const HomePage = () => {
       ) : (
         <p>Rank the movies by their box office take</p>
       )}
+      <ModeSwitch onModeChange={handleModeSwitch} ratingsMode={ratingsMode} />
       <Posters
         movieData={movieData}
         inputValues={inputValues}
         setInputValues={setInputValues}
-      />
-      <ModeSwitch onModeChange={handleModeSwitch} ratingsMode={ratingsMode} />
-      <Choices
-        movieData={movieData}
+        submitted={submitted}
         handleSubmit={handleSubmit}
-        inputValues={inputValues}
-        setInputValues={setInputValues}
-        correctAnswers={correctAnswers}
       />
     </>
   )
