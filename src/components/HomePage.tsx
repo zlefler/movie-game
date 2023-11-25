@@ -20,6 +20,10 @@ const HomePage = () => {
     getMovies()
   }, [])
 
+  useEffect(() => {
+    console.log(ratingsMode)
+  }, [ratingsMode])
+
   const parseRating = (value: string | undefined): number => {
     if (value === undefined) {
       return 0
@@ -47,7 +51,7 @@ const HomePage = () => {
         answerArray.push(false)
       }
     }
-    // setCorrectAnswers(answerArray)
+    // setCorrectAnswers(answerAhrray)
     setSubmitted(true)
   }
 
@@ -74,6 +78,7 @@ const HomePage = () => {
         setInputValues={setInputValues}
         submitted={submitted}
         handleSubmit={handleSubmit}
+        ratingsMode={ratingsMode}
       />
     </>
   )

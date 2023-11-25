@@ -9,6 +9,7 @@ const Posters = ({
   setInputValues,
   submitted,
   handleSubmit,
+  ratingsMode,
 }) => {
   const movieContainerRef = useRef(null)
 
@@ -84,6 +85,8 @@ const Posters = ({
                 />
                 <p style={{ marginTop: '0.5rem' }}>{movie.title}</p>
               </Card>
+              {submitted && ratingsMode && <p>{movie.rating}</p>}
+              {submitted && !ratingsMode && <p>{movie.boxOffice}</p>}
             </div>
           ))}
         </div>
