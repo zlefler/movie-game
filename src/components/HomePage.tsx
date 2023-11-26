@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Posters from './Posters.tsx'
-import ModeSwitch from './ModeSwitch.tsx'
+import Header from './Header.tsx'
 import { MovieResult } from '../types'
+import ResultsModal from './ResultsModal.tsx'
 import fetchMovies from '../lib/fetchMovies.ts'
 
 const HomePage = () => {
@@ -9,26 +10,27 @@ const HomePage = () => {
   const [ratingsMode, setRatingsMode] = useState<boolean>(false)
   const [inputValues, setInputValues] = useState<string[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
-  // const [correctAnswers, setCorrectAnswers] = useState<boolean[]>([])
+  const [open, setOpen] = useState<boolean>(false)
+  const [correctAnswers, setCorrectAnswers] = useState<boolean[]>([])
+
+  const getMovies = async () => {
+    const response = await fetchMovies()
+    setInputValues(response.movies.map((movie) => movie.title))
+    setMovieData(response)
+    console.log(response.movies)
+  }
 
   useEffect(() => {
-    const getMovies = async () => {
-      const response = await fetchMovies()
-      setInputValues(response.movies.map((movie) => movie.title))
-      setMovieData(response)
-    }
     getMovies()
   }, [])
-
-  useEffect(() => {
-    console.log(ratingsMode)
-  }, [ratingsMode])
 
   const parseRating = (value: string | undefined): number => {
     if (value === undefined) {
       return 0
     }
-    return ratingsMode ? parseInt(value.slice(0, -1)) : parseInt(value.slice(1))
+    return ratingsMode
+      ? parseInt(value.slice(0, -1))
+      : parseInt(value.replace(/[$,]/g, ''))
   }
 
   const handleSubmit = () => {
@@ -51,12 +53,22 @@ const HomePage = () => {
         answerArray.push(false)
       }
     }
-    // setCorrectAnswers(answerAhrray)
+    console.log(answers)
+    console.log(answerArray)
+    setCorrectAnswers(answerArray)
     setSubmitted(true)
+    setOpen(true)
   }
 
   const handleModeSwitch = () => {
     setRatingsMode((ratingsMode) => !ratingsMode)
+  }
+
+  const handleReset = () => {
+    setSubmitted(false)
+    setInputValues([])
+    setMovieData(undefined)
+    getMovies()
   }
 
   if (!movieData) {
@@ -65,13 +77,16 @@ const HomePage = () => {
 
   return (
     <>
-      <h1>Movie Rankings</h1>
-      {ratingsMode ? (
-        <p>Rank the movies by their Rotten Tomatoes score</p>
-      ) : (
-        <p>Rank the movies by their box office take</p>
-      )}
-      <ModeSwitch onModeChange={handleModeSwitch} ratingsMode={ratingsMode} />
+      <Header
+        onModeChange={handleModeSwitch}
+        ratingsMode={ratingsMode}
+        onReset={handleReset}
+      />
+      <ResultsModal
+        open={open}
+        setOpen={setOpen}
+        answerArray={correctAnswers}
+      />
       <Posters
         movieData={movieData}
         inputValues={inputValues}
