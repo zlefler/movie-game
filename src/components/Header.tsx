@@ -1,7 +1,7 @@
 import React from 'react'
-import { Switch, Button } from '@mui/material'
+import { Switch } from '@mui/material'
 
-const Header = ({ onModeChange, ratingsMode, onReset }) => {
+const Header = ({ onModeChange, ratingsMode }) => {
   return (
     <>
       <div>
@@ -17,7 +17,6 @@ const Header = ({ onModeChange, ratingsMode, onReset }) => {
         <Switch onChange={onModeChange} />
         <p style={{ color: ratingsMode ? 'white' : 'gray' }}>RT %</p>
       </div>
-      <Button onClick={onReset}>Reset</Button>
     </>
   )
 }

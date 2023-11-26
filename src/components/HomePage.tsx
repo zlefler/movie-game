@@ -4,6 +4,7 @@ import Header from './Header.tsx'
 import { MovieResult } from '../types'
 import ResultsModal from './ResultsModal.tsx'
 import fetchMovies from '../lib/fetchMovies.ts'
+import Footer from './Footer.tsx'
 
 const HomePage = () => {
   const [movieData, setMovieData] = useState<MovieResult>()
@@ -42,6 +43,7 @@ const HomePage = () => {
       const bValue = ratingsMode ? b.rating : b.boxOffice
       return parseRating(bValue) - parseRating(aValue)
     })
+    console.log(order)
     setMovieData({ ...movieData, movies: order })
 
     const answers = order.map((movie) => movie.title)
@@ -62,10 +64,14 @@ const HomePage = () => {
     setRatingsMode((ratingsMode) => !ratingsMode)
   }
 
+  useEffect(() => {
+    console.log(ratingsMode)
+  }, [ratingsMode])
+
   const handleReset = () => {
     setSubmitted(false)
     setInputValues([])
-    setMovieData(undefined)
+    setMovieData({ year: 0, genre: '', movies: [] })
     getMovies()
   }
 
@@ -75,11 +81,7 @@ const HomePage = () => {
 
   return (
     <>
-      <Header
-        onModeChange={handleModeSwitch}
-        ratingsMode={ratingsMode}
-        onReset={handleReset}
-      />
+      <Header onModeChange={handleModeSwitch} ratingsMode={ratingsMode} />
       <ResultsModal
         open={open}
         setOpen={setOpen}
@@ -92,7 +94,9 @@ const HomePage = () => {
         submitted={submitted}
         handleSubmit={handleSubmit}
         ratingsMode={ratingsMode}
+        onReset={handleReset}
       />
+      <Footer />
     </>
   )
 }

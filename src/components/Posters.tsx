@@ -10,6 +10,7 @@ const Posters = ({
   submitted,
   handleSubmit,
   ratingsMode,
+  onReset,
 }) => {
   const movieContainerRef = useRef(null)
 
@@ -52,6 +53,10 @@ const Posters = ({
     }
   }, [movieData?.movies, inputValues, setInputValues])
 
+  const getColor = (title, index) => {
+    return inputValues.indexOf(title) === index ? 'green' : 'red'
+  }
+
   return (
     movieData && (
       <>
@@ -67,7 +72,7 @@ const Posters = ({
             flexWrap: 'wrap',
           }}
         >
-          {movieData.movies.map((movie) => (
+          {movieData.movies.map((movie, index) => (
             <div
               key={movie.title}
               style={{
@@ -83,10 +88,19 @@ const Posters = ({
                   src={movie.poster}
                   style={{ maxHeight: 300, maxWidth: '100%' }}
                 />
-                <p style={{ marginTop: '0.5rem' }}>{movie.title}</p>
+                <p
+                  style={{
+                    marginTop: '0.5rem',
+                  }}
+                >
+                  {movie.title}
+                </p>
               </Card>
-              {submitted && ratingsMode && <p>{movie.rating}</p>}
-              {submitted && !ratingsMode && <p>{movie.boxOffice}</p>}
+              {submitted && (
+                <p style={{ color: getColor(movie.title, index) }}>
+                  {ratingsMode ? movie.rating : movie.boxOffice}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -96,6 +110,9 @@ const Posters = ({
           onClick={() => handleSubmit()}
         >
           Submit
+        </Button>
+        <Button sx={{ margin: '2%' }} color="error" onClick={onReset}>
+          Reset
         </Button>
       </>
     )

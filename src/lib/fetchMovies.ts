@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MovieResult } from '../types'
+import { MovieObject } from '../types'
 import { genres } from './staticData.ts'
 
 const miniApiKey = process.env.REACT_APP_MOVIES_MINI_API_KEY
@@ -15,7 +15,7 @@ const fetchMovies = async () => {
   let genre
   let url
 
-  while (movies.length < 4) {
+  const getTitles = async () => {
     year = getRandomInt(1970, 2022)
     genre = genres[getRandomInt(0, genres.length)]
     console.log(year, genre)
@@ -29,43 +29,62 @@ const fetchMovies = async () => {
     try {
       response = await axios.get(url, { headers })
       // Can change later to more movies
-      movies = response.data.results.slice(0, 5)
+      movies = response.data.results
+      return { year, genre, movies }
     } catch (error) {
       console.error(error)
       await delay(500)
     }
   }
-  const res: MovieResult = { genre, year, movies: [] }
-  for (const movie of movies) {
-    const omdbApiKey = process.env.REACT_APP_OMDB_API_KEY
-    const omdbUrl = `https://www.omdbapi.com/?i=${movie['imdb_id']}&apikey=${omdbApiKey}`
-    try {
-      const response = await axios.get(omdbUrl)
-      const data = response.data
-      let rating
-      for (const movieRating of data['Ratings']) {
-        if (movieRating['Source'] === 'Rotten Tomatoes') {
-          rating = movieRating['Value']
+
+  const getDetails = async ({ filmCount, movies }) => {
+    let movieDetails: MovieObject[] = []
+    for (const movie of movies) {
+      const omdbApiKey = process.env.REACT_APP_OMDB_API_KEY
+      const omdbUrl = `https://www.omdbapi.com/?i=${movie['imdb_id']}&apikey=${omdbApiKey}`
+      try {
+        const response = await axios.get(omdbUrl)
+        const data = response.data
+        let rating
+        for (const movieRating of data['Ratings']) {
+          if (movieRating['Source'] === 'Rotten Tomatoes') {
+            rating = movieRating['Value']
+          }
         }
+        if (rating === 'N/A' || data['BoxOffice'] === 'N/A') {
+          continue
+        }
+        const movieObject = {
+          title: movie['title'],
+          rating,
+          boxOffice: data['BoxOffice'],
+          poster: data['Poster'],
+        }
+        movieDetails.push(movieObject)
+        if (movieDetails.length === filmCount) {
+          return movieDetails
+        }
+      } catch (error) {
+        console.error(error)
       }
-      if (rating === 'N/A' || data['BoxOffice'] === 'N/A') {
-        continue
-      }
-      const movieObject = {
-        title: movie['title'],
-        rating,
-        boxOffice: data['BoxOffice'],
-        poster: data['Poster'],
-      }
-      res.movies.push(movieObject)
-    } catch (error) {
-      console.error(error)
     }
+    return movieDetails
   }
-  if (res.movies.length < 5) {
-    fetchMovies()
-  }
-  return res
+
+  let titles
+  let details
+  do {
+    titles = await getTitles()
+    if (titles) {
+      details = await getDetails({ filmCount: 5, movies: titles.movies })
+    }
+  } while (
+    !titles ||
+    titles.movies.length < 5 ||
+    (details && details.length < 5)
+  )
+
+  return { year: titles.year, genre: titles.genre, movies: details }
 }
 
 export default fetchMovies
