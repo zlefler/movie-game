@@ -53,8 +53,6 @@ const HomePage = () => {
         answerArray.push(false)
       }
     }
-    console.log(answers)
-    console.log(answerArray)
     setCorrectAnswers(answerArray)
     setSubmitted(true)
     setOpen(true)

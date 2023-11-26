@@ -16,8 +16,9 @@ const fetchMovies = async () => {
   let url
 
   while (movies.length < 4) {
-    year = getRandomInt(1982, 2003)
+    year = getRandomInt(1970, 2022)
     genre = genres[getRandomInt(0, genres.length)]
+    console.log(year, genre)
     url = `https://moviesminidatabase.p.rapidapi.com/movie/byYear/${year}/byGen/${genre}/`
 
     const headers = {
@@ -47,6 +48,9 @@ const fetchMovies = async () => {
           rating = movieRating['Value']
         }
       }
+      if (rating === 'N/A' || data['BoxOffice'] === 'N/A') {
+        continue
+      }
       const movieObject = {
         title: movie['title'],
         rating,
@@ -57,6 +61,9 @@ const fetchMovies = async () => {
     } catch (error) {
       console.error(error)
     }
+  }
+  if (res.movies.length < 5) {
+    fetchMovies()
   }
   return res
 }
