@@ -18,7 +18,6 @@ const HomePage = () => {
     const response = await fetchMovies()
     setInputValues(response.movies.map((movie) => movie.title))
     setMovieData(response)
-    console.log(response.movies)
   }
 
   useEffect(() => {
@@ -43,7 +42,6 @@ const HomePage = () => {
       const bValue = ratingsMode ? b.rating : b.boxOffice
       return parseRating(bValue) - parseRating(aValue)
     })
-    console.log(order)
     setMovieData({ ...movieData, movies: order })
 
     const answers = order.map((movie) => movie.title)
@@ -64,14 +62,10 @@ const HomePage = () => {
     setRatingsMode((ratingsMode) => !ratingsMode)
   }
 
-  useEffect(() => {
-    console.log(ratingsMode)
-  }, [ratingsMode])
-
   const handleReset = () => {
     setSubmitted(false)
+    setMovieData(undefined)
     setInputValues([])
-    setMovieData({ year: 0, genre: '', movies: [] })
     getMovies()
   }
 
