@@ -65,6 +65,16 @@ const Posters = ({
           {submitted && <p>Your ranks</p>}
         </h2>
         <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <p style={{ marginLeft: '2%' }}>highest</p>
+          <p style={{ marginRight: '2%' }}>lowest</p>
+        </div>
+        <div
           ref={movieContainerRef}
           style={{
             display: 'flex',
