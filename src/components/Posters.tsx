@@ -11,6 +11,7 @@ const Posters = ({
   handleSubmit,
   ratingsMode,
   onReset,
+  userAnswers,
 }) => {
   const getColor = (title, index) => {
     return inputValues.indexOf(title) === index ? 'green' : 'red'
@@ -38,16 +39,12 @@ const Posters = ({
           {movieData.genre} Movies In {movieData.year}
           {submitted && <p>Your ranks</p>}
         </h2>
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          <p style={{ marginLeft: '2%' }}>highest</p>
-          <p style={{ marginRight: '2%' }}>lowest</p>
-        </div>
+
+        {/* prettier-ignore */}
+        <p style={{ whiteSpace: 'pre-wrap' }}>
+          ⟵ Higher ranks                                       Lower ranks ⟶
+        </p>
+
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable-movie-list" direction="horizontal">
             {(provided, snapshot) => (
@@ -57,49 +54,65 @@ const Posters = ({
                   display: 'flex',
                   justifyContent: 'space-between',
                   flexWrap: 'wrap',
-                  // background: snapshot.isDraggingOver ? 'lightblue' : 'inherit', // Optional: change background color when dragging over
                 }}
                 {...provided.droppableProps}
               >
                 {inputValues.map((title, index) => {
                   const movie = movieData.movies.find((m) => m.title === title)
                   return (
-                    <Draggable
+                    <div
                       key={movie.title}
-                      draggableId={movie.title}
-                      index={index}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                      }}
                     >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={{
-                            ...provided.draggableProps.style,
-                            width: '18%',
-                            margin: '1%',
-                            textAlign: 'center',
-                          }}
-                        >
-                          {submitted && (
-                            <p>{inputValues.indexOf(movie.title) + 1}</p>
-                          )}
-                          <Card>
-                            <img
-                              alt={movie.title}
-                              src={movie.poster}
-                              style={{ maxHeight: 300, maxWidth: '100%' }}
-                            />
-                            <p style={{ marginTop: '0.5rem' }}>{movie.title}</p>
-                          </Card>
-                          {submitted && (
-                            <p style={{ color: getColor(movie.title, index) }}>
-                              {ratingsMode ? movie.rating : movie.boxOffice}
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </Draggable>
+                      <Draggable
+                        key={movie.title}
+                        draggableId={movie.title}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={{
+                              ...provided.draggableProps.style,
+                              flexGrow: 1,
+                              width: 200,
+                              margin: '1vw',
+                              textAlign: 'center',
+                            }}
+                          >
+                            {submitted && (
+                              <div>
+                                <p>{userAnswers.indexOf(movie.title) + 1}</p>
+                              </div>
+                            )}
+                            <Card>
+                              <img
+                                alt={movie.title}
+                                src={movie.poster}
+                                style={{ maxHeight: 300, maxWidth: 'auto' }}
+                              />
+                              <p style={{ marginTop: '0.5rem' }}>
+                                {movie.title}
+                              </p>
+                            </Card>
+                            {submitted && (
+                              <p
+                                style={{
+                                  color: getColor(movie.title, movie.index),
+                                }}
+                              >
+                                {ratingsMode ? movie.rating : movie.boxOffice}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </Draggable>
+                    </div>
                   )
                 })}
                 {provided.placeholder}
@@ -115,7 +128,7 @@ const Posters = ({
           Submit
         </Button>
         <Button sx={{ margin: '2%' }} color="error" onClick={onReset}>
-          Reset
+          Play Again
         </Button>
       </>
     )

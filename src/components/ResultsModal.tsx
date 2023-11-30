@@ -11,9 +11,10 @@ const style = {
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
+  borderRadius: '2%',
 }
 
-const ResultsModal = ({ open, setOpen, answerArray }) => {
+const ResultsModal = ({ openModal, setOpenModal, answerArray }) => {
   const [right, setRight] = useState<number>(0)
   const [total, setTotal] = useState<number>(0)
   const [correctPct, setCorrectPct] = useState<number>(0)
@@ -31,8 +32,8 @@ const ResultsModal = ({ open, setOpen, answerArray }) => {
 
   return (
     <Modal
-      open={open}
-      onClose={() => setOpen(false)}
+      open={openModal}
+      onClose={() => setOpenModal(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
