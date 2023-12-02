@@ -120,15 +120,22 @@ const Posters = ({
             )}
           </Droppable>
         </DragDropContext>
+        {!submitted && (
+          <Button
+            sx={{ width: '300px', marginTop: '30px' }}
+            variant="contained"
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        )}
         <Button
-          sx={{ width: '300px', marginTop: '30px' }}
-          variant="contained"
-          onClick={handleSubmit}
+          sx={{ margin: '2%' }}
+          color={submitted ? 'primary' : 'error'}
+          variant={submitted ? 'contained' : 'text'}
+          onClick={onReset}
         >
-          Submit
-        </Button>
-        <Button sx={{ margin: '2%' }} color="error" onClick={onReset}>
-          Play Again
+          {submitted ? 'Play Again' : 'Reset'}
         </Button>
       </>
     )
