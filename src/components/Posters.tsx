@@ -53,6 +53,7 @@ const Posters = ({
                   display: 'flex',
                   justifyContent: 'space-between',
                   flexWrap: 'nowrap',
+                  overflowX: 'hidden',
                 }}
                 {...provided.droppableProps}
               >
@@ -63,8 +64,8 @@ const Posters = ({
                       key={movie.title}
                       style={{
                         display: 'flex',
-                        justifyContent: 'space-between',
-                        margin: '1vw',
+                        justifyContent: 'center',
+                        margin: '1%',
                       }}
                     >
                       <Draggable
@@ -80,9 +81,8 @@ const Posters = ({
                             style={{
                               ...provided.draggableProps.style,
                               flexGrow: 1,
-                              maxWidth: '200px',
-                              width: 'calc((100% / 5) - 2vw)',
-                              margin: '1vw',
+                              maxWidth: '140px',
+                              width: `calc((100% - (${inputValues.length} * 2%)) / ${inputValues.length})`,
                               textAlign: 'center',
                             }}
                           >
@@ -95,7 +95,7 @@ const Posters = ({
                               <img
                                 alt={movie.title}
                                 src={movie.poster}
-                                style={{ maxHeight: 300, maxWidth: 'auto' }}
+                                style={{ maxWidth: '100%', maxHeight: 300 }}
                               />
                               <p style={{ marginTop: '0.5rem' }}>
                                 {movie.title}
