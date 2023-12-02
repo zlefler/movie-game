@@ -45,13 +45,9 @@ const HomePage = () => {
       return parseRating(bValue) - parseRating(aValue)
     })
     const orderedTitles = order.map((movie) => movie.title)
-    console.log(inputValues)
-    console.log(orderedTitles)
-    const answers = inputValues.map((title, index) => {
-      console.log(title, index)
+    inputValues.map((title, index) => {
       return orderedTitles[index] === title
     })
-    console.log(answers)
     setAnswerArray(
       inputValues.map((title, index) => orderedTitles[index] === title)
     )

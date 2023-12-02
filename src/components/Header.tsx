@@ -14,7 +14,7 @@ const Header = ({ onModeChange, ratingsMode }) => {
       </div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <p style={{ color: ratingsMode ? 'gray' : 'white' }}>Box Office</p>
-        <Switch onChange={onModeChange} />
+        <Switch checked={ratingsMode} onChange={onModeChange} />
         <p style={{ color: ratingsMode ? 'white' : 'gray' }}>RT %</p>
       </div>
     </>

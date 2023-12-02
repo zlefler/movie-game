@@ -1,7 +1,6 @@
 import React from 'react'
 import { Card, Button } from '@mui/material'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-// import { useEffect, useRef } from 'react'
 
 const Posters = ({
   movieData,
