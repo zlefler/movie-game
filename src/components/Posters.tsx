@@ -52,7 +52,7 @@ const Posters = ({
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  flexWrap: 'wrap',
+                  flexWrap: 'nowrap',
                 }}
                 {...provided.droppableProps}
               >
@@ -64,6 +64,7 @@ const Posters = ({
                       style={{
                         display: 'flex',
                         justifyContent: 'space-between',
+                        margin: '1vw',
                       }}
                     >
                       <Draggable
@@ -79,7 +80,8 @@ const Posters = ({
                             style={{
                               ...provided.draggableProps.style,
                               flexGrow: 1,
-                              width: 200,
+                              maxWidth: '200px',
+                              width: 'calc((100% / 5) - 2vw)',
                               margin: '1vw',
                               textAlign: 'center',
                             }}
