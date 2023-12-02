@@ -66,6 +66,7 @@ const Posters = ({
                         display: 'flex',
                         justifyContent: 'center',
                         margin: '1%',
+                        width: `calc((100% - (${inputValues.length} * 2%)) / ${inputValues.length})`,
                       }}
                     >
                       <Draggable
@@ -81,7 +82,7 @@ const Posters = ({
                             style={{
                               ...provided.draggableProps.style,
                               flexGrow: 1,
-                              maxWidth: '140px',
+                              maxWidth: '220px',
                               width: `calc((100% - (${inputValues.length} * 2%)) / ${inputValues.length})`,
                               textAlign: 'center',
                             }}
