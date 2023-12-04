@@ -13,7 +13,7 @@ const Posters = ({
   userAnswers,
 }) => {
   const getColor = (title, index) => {
-    return inputValues.indexOf(title) === index ? 'green' : 'red'
+    return userAnswers.indexOf(title) === index ? 'green' : 'red'
   }
 
   const reorder = (startIndex, endIndex) => {
@@ -105,7 +105,7 @@ const Posters = ({
                             {submitted && (
                               <p
                                 style={{
-                                  color: getColor(movie.title, movie.index),
+                                  color: getColor(movie.title, index),
                                 }}
                               >
                                 {ratingsMode ? movie.rating : movie.boxOffice}
