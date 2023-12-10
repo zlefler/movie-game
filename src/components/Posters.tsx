@@ -11,6 +11,7 @@ const Posters = ({
   ratingsMode,
   onReset,
   userAnswers,
+  portraitMode,
 }) => {
   const getColor = (title, index) => {
     return userAnswers.indexOf(title) === index ? 'green' : 'red'
@@ -40,81 +41,104 @@ const Posters = ({
         </h2>
 
         {/* prettier-ignore */}
-        <p style={{ whiteSpace: 'pre-wrap' }}>
-          ⟵ Higher ranks                                       Lower ranks ⟶
-        </p>
+        {!portraitMode && (
+          <p style={{ whiteSpace: 'pre-wrap' }}>⟵ Higher ranks Lower ranks ⟶</p>
+        )}
+
+        {portraitMode && <p>Put higher ranks at the top</p>}
 
         <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="droppable-movie-list" direction="horizontal">
+          <Droppable
+            droppableId="droppable-movie-list"
+            direction={portraitMode ? 'vertical' : 'horizontal'}
+          >
             {(provided, snapshot) => (
               <div
                 ref={provided.innerRef}
                 style={{
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  flexWrap: 'nowrap',
-                  overflowX: 'hidden',
+                  flexDirection: portraitMode ? 'column' : 'row',
+                  alignItems: 'center',
+                  overflowY: portraitMode ? 'auto' : 'hidden',
+                  overflowX: portraitMode ? 'hidden' : 'auto',
+                  maxHeight: portraitMode ? '90vh' : 'auto', // Adjust as needed for mobile screen height
+                  justifyContent: portraitMode ? 'flex-start' : 'space-between',
                 }}
                 {...provided.droppableProps}
               >
                 {inputValues.map((title, index) => {
                   const movie = movieData.movies.find((m) => m.title === title)
                   return (
-                    <div
+                    <Draggable
                       key={movie.title}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        margin: '1%',
-                        width: `calc((100% - (${inputValues.length} * 2%)) / ${inputValues.length})`,
-                      }}
+                      draggableId={movie.title}
+                      index={index}
                     >
-                      <Draggable
-                        key={movie.title}
-                        draggableId={movie.title}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={{
+                            ...provided.draggableProps.style,
+                            display: 'flex',
+                            flexDirection: portraitMode ? 'row' : 'column',
+                            alignItems: 'center',
+                            marginBottom: portraitMode ? '10px' : '0',
+                            width: portraitMode
+                              ? '100%'
+                              : `calc((100% - (${inputValues.length} * 2%)) / ${inputValues.length})`,
+                          }}
+                        >
+                          <Card
                             style={{
-                              ...provided.draggableProps.style,
-                              flexGrow: 1,
-                              maxWidth: '220px',
-                              width: `calc((100% - (${inputValues.length} * 2%)) / ${inputValues.length})`,
-                              textAlign: 'center',
+                              marginRight: portraitMode ? '10px' : '0',
+                              maxWidth: portraitMode ? '100px' : '220px',
                             }}
                           >
+                            <img
+                              alt={movie.title}
+                              src={movie.poster}
+                              style={{
+                                maxWidth: '100%',
+                                maxHeight: portraitMode ? '150px' : '300px',
+                              }}
+                            />
+                          </Card>
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexDirection: portraitMode ? 'column' : 'row',
+                              alignItems: portraitMode
+                                ? 'flex-start'
+                                : 'center',
+                            }}
+                          >
+                            <p
+                              style={{
+                                margin: portraitMode
+                                  ? '0 0 5px 0'
+                                  : '5px 0 0 0',
+                              }}
+                            >
+                              {movie.title}
+                            </p>
                             {submitted && (
-                              <div>
+                              <div style={{ textAlign: 'center' }}>
                                 <p>{userAnswers.indexOf(movie.title) + 1}</p>
+                                <p
+                                  style={{
+                                    color: getColor(movie.title, index),
+                                  }}
+                                >
+                                  {ratingsMode ? movie.rating : movie.boxOffice}
+                                </p>
                               </div>
                             )}
-                            <Card>
-                              <img
-                                alt={movie.title}
-                                src={movie.poster}
-                                style={{ maxWidth: '100%', maxHeight: 300 }}
-                              />
-                              <p style={{ marginTop: '0.5rem' }}>
-                                {movie.title}
-                              </p>
-                            </Card>
-                            {submitted && (
-                              <p
-                                style={{
-                                  color: getColor(movie.title, index),
-                                }}
-                              >
-                                {ratingsMode ? movie.rating : movie.boxOffice}
-                              </p>
-                            )}
                           </div>
-                        )}
-                      </Draggable>
-                    </div>
+                        </div>
+                      )}
+                    </Draggable>
                   )
                 })}
                 {provided.placeholder}

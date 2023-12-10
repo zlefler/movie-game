@@ -35,13 +35,16 @@ const HomePage = () => {
         setPortraitMode(false)
       }
     }
-
     window.addEventListener('orientationchange', checkOrientation)
     checkOrientation()
     return () => {
       window.removeEventListener('orientationchange', checkOrientation)
     }
   }, [])
+
+  useEffect(() => {
+    console.log(portraitMode)
+  }, [portraitMode])
 
   const parseRating = (value: string | undefined): number => {
     if (value === undefined) {
@@ -113,6 +116,7 @@ const HomePage = () => {
         ratingsMode={ratingsMode}
         onReset={handleReset}
         userAnswers={userAnswers}
+        portraitMode={portraitMode}
       />
       <Footer />
     </>

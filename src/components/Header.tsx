@@ -17,7 +17,7 @@ const Header = ({ onModeChange, ratingsMode, portraitMode }) => {
         <Switch checked={ratingsMode} onChange={onModeChange} />
         <p style={{ color: ratingsMode ? 'white' : 'gray' }}>RT %</p>
       </div>
-      {portraitMode && <p>Landscape mode strongly encouraged</p>}
+      {portraitMode && <p>Landscape mode encouraged!</p>}
     </>
   )
 }
