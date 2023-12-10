@@ -42,7 +42,11 @@ const Posters = ({
 
         {/* prettier-ignore */}
         {!portraitMode && (
-          <p style={{ whiteSpace: 'pre-wrap' }}>⟵ Higher ranks Lower ranks ⟶</p>
+          <p style={{ whiteSpace: 'pre-wrap' }}>
+            {
+              '⟵ Higher ranks                                         Lower ranks ⟶'
+            }
+          </p>
         )}
 
         {portraitMode && <p>Put higher ranks at the top</p>}
@@ -58,10 +62,10 @@ const Posters = ({
                 style={{
                   display: 'flex',
                   flexDirection: portraitMode ? 'column' : 'row',
-                  alignItems: 'center',
+                  alignItems: portraitMode ? 'center' : 'flex-start',
                   overflowY: portraitMode ? 'auto' : 'hidden',
                   overflowX: portraitMode ? 'hidden' : 'auto',
-                  maxHeight: portraitMode ? '90vh' : 'auto', // Adjust as needed for mobile screen height
+                  maxHeight: portraitMode ? '90vh' : 'auto',
                   justifyContent: portraitMode ? 'flex-start' : 'space-between',
                 }}
                 {...provided.droppableProps}
@@ -125,7 +129,9 @@ const Posters = ({
                             </p>
                             {submitted && (
                               <div style={{ textAlign: 'center' }}>
-                                <p>{userAnswers.indexOf(movie.title) + 1}</p>
+                                <strong>
+                                  {userAnswers.indexOf(movie.title) + 1}
+                                </strong>
                                 <p
                                   style={{
                                     color: getColor(movie.title, index),
