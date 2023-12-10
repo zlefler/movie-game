@@ -14,6 +14,7 @@ const HomePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [userAnswers, setUserAnswers] = useState<string[]>([])
   const [answerArray, setAnswerArray] = useState<boolean[]>([])
+  const [portraitMode, setPortraitMode] = useState<boolean>(false)
 
   const getMovies = async () => {
     const response = await fetchMovies()
@@ -23,6 +24,23 @@ const HomePage = () => {
 
   useEffect(() => {
     getMovies()
+  }, [])
+
+  useEffect(() => {
+    const checkOrientation = () => {
+      const orientation = window.screen.orientation.type
+      if (orientation.includes('portrait')) {
+        setPortraitMode(true)
+      } else {
+        setPortraitMode(false)
+      }
+    }
+
+    window.addEventListener('orientationchange', checkOrientation)
+    checkOrientation()
+    return () => {
+      window.removeEventListener('orientationchange', checkOrientation)
+    }
   }, [])
 
   const parseRating = (value: string | undefined): number => {
@@ -76,7 +94,11 @@ const HomePage = () => {
 
   return (
     <>
-      <Header onModeChange={handleModeSwitch} ratingsMode={ratingsMode} />
+      <Header
+        onModeChange={handleModeSwitch}
+        ratingsMode={ratingsMode}
+        portraitMode={portraitMode}
+      />
       <ResultsModal
         openModal={openModal}
         setOpenModal={setOpenModal}

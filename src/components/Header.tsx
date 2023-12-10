@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch } from '@mui/material'
 
-const Header = ({ onModeChange, ratingsMode }) => {
+const Header = ({ onModeChange, ratingsMode, portraitMode }) => {
   return (
     <>
       <div>
@@ -17,7 +17,7 @@ const Header = ({ onModeChange, ratingsMode }) => {
         <Switch checked={ratingsMode} onChange={onModeChange} />
         <p style={{ color: ratingsMode ? 'white' : 'gray' }}>RT %</p>
       </div>
-      <p>Landscape mode strongly encouraged</p>
+      {portraitMode && <p>Landscape mode strongly encouraged</p>}
     </>
   )
 }
