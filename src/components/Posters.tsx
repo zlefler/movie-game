@@ -112,7 +112,7 @@ const Posters = ({
                           <div
                             style={{
                               display: 'flex',
-                              flexDirection: portraitMode ? 'column' : 'row',
+                              flexDirection: 'column',
                               alignItems: portraitMode
                                 ? 'flex-start'
                                 : 'center',
