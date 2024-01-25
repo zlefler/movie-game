@@ -42,10 +42,6 @@ const HomePage = () => {
     }
   }, [])
 
-  useEffect(() => {
-    console.log(portraitMode)
-  }, [portraitMode])
-
   const parseRating = (value: string | undefined): number => {
     if (value === undefined) {
       return 0
