@@ -15,11 +15,19 @@ const HomePage = () => {
   const [userAnswers, setUserAnswers] = useState<string[]>([])
   const [answerArray, setAnswerArray] = useState<boolean[]>([])
   const [portraitMode, setPortraitMode] = useState<boolean>(false)
+  const [nextRound, setNextRound] = useState<MovieResult>()
 
   const getMovies = async () => {
+    if (nextRound) {
+      setMovieData(nextRound)
+      setInputValues(nextRound.movies.map((movie) => movie.title))
+    } else {
+      const response = await fetchMovies()
+      setInputValues(response.movies.map((movie) => movie.title))
+      setMovieData(response)
+    }
     const response = await fetchMovies()
-    setInputValues(response.movies.map((movie) => movie.title))
-    setMovieData(response)
+    setNextRound(response)
   }
 
   useEffect(() => {
